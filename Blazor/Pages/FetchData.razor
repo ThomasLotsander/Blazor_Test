@@ -1,10 +1,7 @@
 ﻿@page "/fetchdata"
 
 @using Blazor.Data
-@using Blazor.Services
-@using DataAccess.Models
 @inject WeatherForecastService ForecastService
-@inject JokeService JokeService
 
 <h1>Weather forecast</h1>
 
@@ -39,31 +36,12 @@ else
     </table>
 }
 
-<label for="pk-filter">Tillåt alla skämt?</label>
-<input id="pk-filter" type="checkbox" @bind-value="Pk_filter" />
-<button @onclick="@GetJoke">Ge mig en ordvits!</button>
-
-
-@if (joke != null)
-{
-    <p>- @joke.Premiss</p>
-    <p>- @joke.PunchLine</p>
-
-
-}
 
 @code {
     private WeatherForecast[] forecasts;
-    private Joke joke;
-    private bool Pk_filter;
+   
     protected override async Task OnInitializedAsync()
     {
         forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
-    }
-
-
-    private async Task GetJoke()
-    {
-        joke = await JokeService.GetRandomJoke(Pk_filter);
     }
 }
