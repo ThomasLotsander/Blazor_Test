@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Blazor.Data;
+using Blazor.Services;
+using DataAccess.DataAccessLayer;
+using Microsoft.EntityFrameworkCore;
 
 namespace Blazor
 {
@@ -29,6 +32,9 @@ namespace Blazor
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+            services.AddTransient<JokeService>();
+            services.AddDbContext<Context>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("ProdConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
