@@ -1,54 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Blazor.ViewModels;
 using DataAccess.DataAccessLayer;
 using DataAccess.Models;
+using DataAccess.Services;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace Blazor.Services
 {
     public class JokeService
     {
+        //private readonly DbJokeService _dbJoke;
         private readonly Context _context;
 
         public JokeService(Context context)
         {
+            //_dbJoke = jk;
             _context = context;
         }
 
+
         public async Task<Joke> GetRandomJoke(bool acceptExplicit = false)
         {
-            try
-            {
-                var rnd = new Random();
-                var jokes = await GetJokes(acceptExplicit);
-
-                var joke = jokes[rnd.Next(0, jokes.Count)];
-                return joke;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            return await _context.Jokes.FirstAsync(); //.GetRandomJoke(acceptExplicit);
         }
 
-        private async Task<List<Joke>> GetJokes(bool acceptExplicit = false)
+        public async Task<bool> CreateJoke(JokeViewModel jokeModel)
         {
-            try
+            var joke = new Joke()
             {
-                var jokes = await _context.Jokes.ToListAsync();
-                if (!acceptExplicit)
-                    jokes = jokes.Where(x => x.IsExplicit != true).ToList();
-
-                return jokes;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+                Premiss = jokeModel.Premiss,
+                PunchLine = jokeModel.PunchLine,
+                Explanation = jokeModel.Explanation,
+                IsExplicit = jokeModel.IsExplicit
+            };
+            // TODO: Validate joke 
+            return false;
+            //return await _dbJoke.CreateJoke(joke);
         }
+        
+       
     }
 }

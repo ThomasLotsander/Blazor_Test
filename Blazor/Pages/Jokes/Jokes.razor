@@ -1,0 +1,38 @@
+﻿@page "/ordvitsar"
+@using DataAccess.Models
+@using Blazor.Services
+@inject JokeService JokeService
+
+<a class="btn btn-danger" href="Skapa ordvits"
+>Skapa ordvits</a>
+
+<div class="container">
+    <div class="row">
+        <label for="pk-filter">Tillåt alla skämt?</label>
+        <input id="pk-filter" type="checkbox" @bind-value="Pk_filter"/>
+        <button @onclick="@GetJoke">Ge mig en ordvits!</button>
+    </div>
+    <div class="row"></div>
+    
+</div>
+
+@if (joke != null)
+{
+    <p>- @joke.Premiss</p>
+    <p>- @joke.PunchLine</p>
+
+
+}
+
+@code {
+
+    private Joke joke;
+    private bool Pk_filter;
+
+
+
+    private async Task GetJoke()
+    {
+        joke = await JokeService.GetRandomJoke(Pk_filter);
+    }
+}
